@@ -2,14 +2,12 @@
   "name": "html5-game",
   "version": "1.0.0",
   "description": "Lets copy Ballz",
-  "main": "index.js",
+  "main": "app/index.html",
   "scripts": {
-    "start": "node ./app/server.js",
-    "build-and-run": "rm -rf app/ && npm run build && npm start",
-    "build": "babel src/ -d app/",
+    "start": "gulp",
     "lint": "npm run lint:js && npm run lint:scss",
     "lint:js": "eslint --format=node_modules/eslint-codeframe-formatter --ignore-path .gitignore src/",
-    "lint:scss": "stylelint \"**/*.scss\" --syntax scss",
+    "lint:scss": "stylelint \"**/*.scss\" --syntax scss"
   },
   "repository": {
     "type": "git",
@@ -23,10 +21,15 @@
   "homepage": "https://github.com/robcrocombe/html5-game#readme",
   "dependencies": {
     "babel-cli": "^6.24.1",
+    "babel-loader": "^6.4.1",
     "babel-preset-latest": "^6.24.1",
     "babel-register": "^6.24.1",
+    "gulp": "^3.9.1",
+    "gulp-util": "^3.0.8",
+    "mainloop.js": "^1.0.3",
     "stylelint": "^7.10.1",
-    "stylelint-config-standard": "^16.0.0"
+    "stylelint-config-standard": "^16.0.0",
+    "webpack": "^2.4.1"
   },
   "devDependencies": {
     "eslint": "^3.19.0",

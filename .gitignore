@@ -4,6 +4,6 @@ npm-debug.log*
 
 node_modules
 
-app/
+build/
 .env
 .DS_Store
