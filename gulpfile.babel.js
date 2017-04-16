@@ -11,7 +11,7 @@ const jsConfig = {
     loaders: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: /(node_modules|build)/,
         loader: 'babel-loader'
       }
     ]
@@ -75,6 +75,12 @@ function jsProd(done) {
   runWebpack(config, done);
 }
 
+function htmlCopy() {
+  return gulp.src('src/index.html')
+    .pipe(gulp.dest('build/'));
+}
+
 gulp.task('dev:build', jsDev);
 gulp.task('pro:build', jsProd);
-gulp.task('default', jsDev);
+gulp.task('dev:html', htmlCopy);
+gulp.task('default', ['dev:html'], jsDev);
