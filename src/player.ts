@@ -6,6 +6,7 @@ export default class Player {
   readonly height = 10;
   readonly radius = 3;
   ballCount = 10;
+  distance = 5;
   angle: number;
   pos: Pos;
 
@@ -13,7 +14,7 @@ export default class Player {
     this.canvas = canvas;
     this.pos = {
       x: (canvas.width / 2) - this.width,
-      y: canvas.height - 100
+      y: canvas.height - this.height
     };
   }
 
@@ -21,8 +22,12 @@ export default class Player {
     const targetX  = mouse.x - (this.pos.x + this.width + (this.height / 2));
     const targetY  = mouse.y - this.pos.y;
     const rotation = Math.atan2(targetY, targetX);
-    // this.angle = utils.clamp(rotation, -Math.PI - 1, 0);
-    this.angle = rotation;
+
+    if (rotation > 0) {
+      this.angle = Math.PI + rotation;
+    } else {
+      this.angle = rotation;
+    }
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -35,16 +40,13 @@ export default class Player {
     ctx.rotate(this.angle);
 
     for (let i = 0; i < this.ballCount; ++i) {
-      offset = (this.radius * 5) * i;
+      offset = (this.radius * this.distance) * i;
       ctx.arc(offset, 0, this.radius, 0, Math.PI * 2);
     }
+
     ctx.fillStyle = '#0095DD';
     ctx.fill();
 
-    // ctx.rotate(this.angle);
-    // ctx.rect(0, 0, this.width, this.height);
-    // ctx.fillStyle = '#0095DD';
-    // ctx.fill();
     ctx.closePath();
     ctx.restore();
   }
