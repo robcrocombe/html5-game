@@ -1,4 +1,4 @@
-import * as MainLoop from '../node_modules/mainloop.js/build/mainloop.min.js';
+import * as MainLoop from 'mainloop.js';
 import Player from './player';
 
 const loop: MainLoop = MainLoop;
@@ -13,6 +13,7 @@ function update(delta: number) {
 }
 
 function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   player.draw(ctx);
 }
 
