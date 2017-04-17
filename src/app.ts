@@ -9,7 +9,7 @@ const ctx = canvas.getContext('2d');
 
 const player = new Player(canvas);
 
-let mouse: Pos;
+let mouse: Pos = { x: 0, y: 0 };
 
 window.addEventListener('mousemove', setMousePos);
 
