@@ -1,0 +1,7 @@
+{
+  "name": "html5-game",
+  "dependencies": {},
+  "globalDependencies": {
+    "mainloop.js": "registry:dt/mainloop.js#1.0.3+20161005184000"
+  }
+}
