@@ -10,7 +10,7 @@ const ctx = canvas.getContext('2d');
 
 const player = new Player(canvas);
 
-const ball = new Ball(canvas);
+let ball: Ball;
 
 let mouse: Mouse = {
   pos: { x: 0, y: 0 },
@@ -29,6 +29,14 @@ function mousedown(e: MouseEvent) {
 
 function mouseup(e: MouseEvent) {
   mouse.down = false;
+
+  const diffX = player.pos.x - e.clientX;
+  const diffY = player.pos.y - e.clientY;
+  const angle = Math.atan2(diffY, diffX);
+
+  const pos = Object.assign({}, player.pos);
+
+  ball = new Ball(canvas, pos, angle);
 }
 
 function mousemove(e: MouseEvent) {
@@ -37,13 +45,17 @@ function mousemove(e: MouseEvent) {
 
 function update(delta: number) {
   player.update(delta, mouse);
-  ball.update(delta);
+  if (ball) {
+    ball.update(delta);
+  }
 }
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   player.draw(ctx);
-  ball.draw(ctx);
+  if (ball) {
+    ball.draw(ctx);
+  }
 }
 
 loop.setUpdate(update).setDraw(draw).start();
