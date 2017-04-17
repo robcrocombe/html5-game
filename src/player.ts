@@ -18,20 +18,26 @@ export default class Player {
     };
   }
 
-  update(delta: number, mouse: Pos) {
-    const targetX  = mouse.x - (this.pos.x + this.width + (this.height / 2));
-    const targetY  = mouse.y - this.pos.y;
-    const rotation = Math.atan2(targetY, targetX);
+  update(delta: number, mouse: Mouse) {
+    if (mouse.down) {
+      const targetX  = mouse.pos.x - (this.pos.x + this.width + (this.height / 2));
+      const targetY  = mouse.pos.y - this.pos.y;
+      const rotation = Math.atan2(targetY, targetX);
 
-    if (rotation > 0) {
-      this.angle = Math.PI + rotation;
-    } else {
-      this.angle = rotation;
+      if (rotation > 0) {
+        this.angle = Math.PI + rotation;
+      } else {
+        this.angle = rotation;
+      }
+
+        let dist = utils.distance(mouse.lastClicked, mouse.pos);
+        dist = dist * 0.04;
+        this.distance = utils.clamp(dist, 0, 10);
     }
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    utils.writeMessage(ctx, this.angle);
+    utils.writeMessage(ctx, this.distance);
     ctx.save();
     ctx.beginPath();
     ctx.translate(this.pos.x + this.width, this.pos.y + (this.height / 2));

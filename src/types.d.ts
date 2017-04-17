@@ -1,4 +1,10 @@
 interface Pos {
-  x: number,
+  x: number
   y: number
+}
+
+interface Mouse {
+  pos: Pos
+  lastClicked?: Pos
+  down?: boolean
 }
