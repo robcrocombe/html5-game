@@ -1,5 +1,6 @@
 import * as MainLoop from 'mainloop.js';
 import Player from './player';
+import * as utils from './utils';
 
 const loop: MainLoop = MainLoop;
 
@@ -8,8 +9,16 @@ const ctx = canvas.getContext('2d');
 
 const player = new Player(canvas);
 
+let mouse: Pos;
+
+window.addEventListener('mousemove', setMousePos);
+
+function setMousePos(e: MouseEvent) {
+  mouse = utils.getMousePos(canvas, e);
+}
+
 function update(delta: number) {
-  player.update(delta);
+  player.update(delta, mouse);
 }
 
 function draw() {
