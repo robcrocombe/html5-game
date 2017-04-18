@@ -37,7 +37,6 @@ export default class Player {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    utils.writeMessage(ctx, this.distance);
     ctx.save();
     ctx.beginPath();
     ctx.translate(this.pos.x + this.width, this.pos.y + (this.height / 2));

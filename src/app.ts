@@ -1,14 +1,28 @@
-import * as MainLoop from 'mainloop.js';
+import * as ml from 'mainloop.js';
 import Player from './player';
 import Ball from './ball';
+import Tile from './tile';
+import * as game from './game';
 import * as utils from './utils';
 
-const loop: MainLoop = MainLoop;
+const loop: MainLoop = ml;
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d');
 
 const player = new Player(canvas);
+
+const tiles: Tile[] = [];
+
+for (let i = 0; i < 7; ++i) {
+  tiles.push(new Tile());
+}
+
+game.setTilePositions(canvas, tiles);
+
+for (let i = 0; i < 7; ++i) {
+  console.log(tiles[i].pos);
+}
 
 let ball: Ball;
 
@@ -55,6 +69,12 @@ function draw() {
   if (ball) {
     ball.draw(ctx);
   }
+
+  for (let i = 0; i < tiles.length; ++i) {
+    tiles[i].draw(ctx);
+  }
+
+  utils.writeMessage(ctx, Math.round(loop.getFPS()));
 }
 
 loop.setUpdate(update).setDraw(draw).start();
