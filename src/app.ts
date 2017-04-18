@@ -30,13 +30,12 @@ function mousedown(e: MouseEvent) {
 function mouseup(e: MouseEvent) {
   mouse.down = false;
 
-  const diffX = player.pos.x - e.clientX;
-  const diffY = player.pos.y - e.clientY;
-  const angle = Math.atan2(diffY, diffX);
+  const pos: Pos = {
+    x: player.pos.x + player.width,
+    y: player.pos.y
+  }
 
-  const pos = Object.assign({}, player.pos);
-
-  ball = new Ball(canvas, pos, angle);
+  ball = new Ball(canvas, pos, player.angle);
 }
 
 function mousemove(e: MouseEvent) {

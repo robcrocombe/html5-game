@@ -30,9 +30,9 @@ export default class Player {
         this.angle = rotation;
       }
 
-        let dist = utils.distance(mouse.lastClicked, mouse.pos);
-        dist = dist * 0.04;
-        this.distance = utils.clamp(dist, 0, 10);
+      let dist = utils.distance(mouse.lastClicked, mouse.pos);
+      dist = dist * 0.04;
+      this.distance = utils.clamp(dist, 0, 10);
     }
   }
 
