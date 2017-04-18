@@ -1,13 +1,12 @@
 import Tile from './tile';
 
-const rowLength = 7;
-const xPadding = 20;
+const xPadding = 150;
 const yPadding = 20;
 
 export function setTilePositions(canvas: HTMLCanvasElement, tiles: Tile[]) {
   let pos: Pos = { x: xPadding, y: yPadding };
 
-  Tile.width = Math.floor((canvas.width - (xPadding * 2)) / rowLength);
+  Tile.width = Math.floor((canvas.width - (xPadding * 2)) / Tile.rowLength);
   Tile.height = Tile.width;
 
   for (let i = tiles.length - 1; i >= 0; --i) {
@@ -19,8 +18,8 @@ export function setTilePositions(canvas: HTMLCanvasElement, tiles: Tile[]) {
 
     pos.x += Tile.width;
 
-    if (i % rowLength === 0) {
-      pos.x = 0;
+    if (i % Tile.rowLength === 0) {
+      pos.x = xPadding;
       pos.y += Tile.height;
     }
   }

@@ -14,15 +14,11 @@ const player = new Player(canvas);
 
 const tiles: Tile[] = [];
 
-for (let i = 0; i < 7; ++i) {
+for (let i = 0; i < 14; ++i) {
   tiles.push(new Tile());
 }
 
 game.setTilePositions(canvas, tiles);
-
-for (let i = 0; i < 7; ++i) {
-  console.log(tiles[i].pos);
-}
 
 let ball: Ball;
 
