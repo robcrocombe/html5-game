@@ -4,9 +4,13 @@ export default class Tile {
   static rowLength = 7;
   static width;
   static height;
-  static padding = 6;
+  static padding = 1;
   health: number;
   pos: Pos;
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
 
   constructor() {
     this.health = this.getRandomInt(1, 5);
@@ -16,15 +20,17 @@ export default class Tile {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(this.pos.x + Tile.padding, this.pos.y + Tile.padding,
-      Tile.width - Tile.padding, Tile.height - Tile.padding);
-    ctx.fillStyle = '#43A047';
-    ctx.fill();
-    this.drawHealth(ctx);
-    ctx.closePath();
-    ctx.restore();
+    if (this.health > 0) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(this.pos.x + Tile.padding, this.pos.y + Tile.padding,
+        Tile.width - Tile.padding, Tile.height - Tile.padding);
+      ctx.fillStyle = '#43A047';
+      ctx.fill();
+      this.drawHealth(ctx);
+      ctx.closePath();
+      ctx.restore();
+    }
   }
 
   drawHealth(ctx: CanvasRenderingContext2D) {
@@ -37,6 +43,6 @@ export default class Tile {
   getRandomInt(min: number, max: number): number {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.round(Math.floor(Math.random() * (max - min + 1)) + min);
   }
 }

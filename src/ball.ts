@@ -8,10 +8,13 @@ export default class Ball {
   readonly speed = 0.2;
   pos: Pos;
   ver: Pos;
+  angle: number;
+  lastPos: Pos;
 
   constructor(canvas: HTMLCanvasElement, pos: Pos, angle: number) {
     this.canvas = canvas;
     this.pos = pos;
+    // this.angle = angle;
     this.ver = {
       x: Math.cos(angle) * this.speed,
       y: Math.sin(angle) * this.speed
@@ -27,9 +30,26 @@ export default class Ball {
       || this.pos.y + this.ver.y < this.radius) {
         this.ver.y = -this.ver.y;
     }
+    // if (this.pos.x + this.radius > this.canvas.width
+    //   || this.pos.x < this.radius) {
+    //     this.angle = Math.PI - this.angle;
+    // }
+    // if (this.pos.y + this.radius > this.canvas.height
+    //   || this.pos.y < this.radius) {
+    //     this.angle = (Math.PI * 2) - this.angle;
+    // }
+
+    this.lastPos = {
+      x: this.pos.x,
+      y: this.pos.y
+    };
 
     this.pos.x += this.ver.x * delta;
     this.pos.y += this.ver.y * delta;
+    // const xunits = Math.cos(this.angle) * this.speed;
+    // const yunits = Math.sin(this.angle) * this.speed;
+    // this.pos.x += xunits;
+    // this.pos.y += yunits;
   }
 
   draw(ctx: CanvasRenderingContext2D) {

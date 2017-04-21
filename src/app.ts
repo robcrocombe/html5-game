@@ -56,6 +56,7 @@ function update(delta: number) {
   player.update(delta, mouse);
   if (ball) {
     ball.update(delta);
+    game.collisionDetection(canvas, tiles, [ball]);
   }
 }
 

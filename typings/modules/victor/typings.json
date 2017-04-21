@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/2be13c30c3d71f4ed652889a081e9ef9c845110e/victor/index.d.ts",
+    "raw": "registry:dt/victor#0.2.5+20161006051847",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/2be13c30c3d71f4ed652889a081e9ef9c845110e/victor/index.d.ts"
+  }
+}
