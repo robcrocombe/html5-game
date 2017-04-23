@@ -1,4 +1,5 @@
 // import * as utils from './utils';
+import Player from './player';
 
 export default class Ball {
   readonly canvas: HTMLCanvasElement;
@@ -6,18 +7,22 @@ export default class Ball {
   readonly height = 10;
   readonly radius = 5;
   readonly speed = 0.4;
-  pos: Pos;
-  ver: Pos;
+  alive: boolean = true;
+  pos: Vector;
+  ver: Vector;
   angle: number;
-  lastPos: Pos;
+  lastPos: Vector;
 
-  constructor(canvas: HTMLCanvasElement, pos: Pos, angle: number) {
+  constructor(canvas: HTMLCanvasElement, player: Player) {
     this.canvas = canvas;
-    this.pos = pos;
+    this.pos = {
+      x: player.pos.x + player.width,
+      y: player.pos.y
+    };
     // this.angle = angle;
     this.ver = {
-      x: Math.cos(angle) * this.speed,
-      y: Math.sin(angle) * this.speed
+      x: Math.cos(player.angle) * this.speed,
+      y: Math.sin(player.angle) * this.speed
     };
   }
 
@@ -26,9 +31,14 @@ export default class Ball {
       || this.pos.x + this.ver.x < this.radius) {
         this.ver.x = -this.ver.x;
     }
-    if (this.pos.y + this.ver.y > this.canvas.height - this.radius
-      || this.pos.y + this.ver.y < this.radius) {
+    if (this.pos.y + this.ver.y < this.radius) {
         this.ver.y = -this.ver.y;
+    }
+    if (this.pos.y + this.ver.y > this.canvas.height - this.radius) {
+      this.alive = false;
+      this.ver.x = 0;
+      this.ver.y = 0;
+      return;
     }
     // if (this.pos.x + this.radius > this.canvas.width
     //   || this.pos.x < this.radius) {
@@ -57,11 +67,6 @@ export default class Ball {
     ctx.beginPath();
     ctx.arc(this.pos.x, this.pos.y, this.radius, 0, Math.PI * 2);
     ctx.fillStyle = '#D32F2F';
-    ctx.fill();
-    ctx.closePath();
-    ctx.beginPath();
-    ctx.rect(this.pos.x - 1, this.pos.y -1 , 2, 2);
-    ctx.fillStyle = 'blue';
     ctx.fill();
     ctx.closePath();
     ctx.restore();

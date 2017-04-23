@@ -1,4 +1,5 @@
 import * as utils from './utils';
+import Mouse from './mouse';
 
 export default class Player {
   readonly canvas: HTMLCanvasElement;
@@ -8,7 +9,7 @@ export default class Player {
   ballCount = 10;
   distance = 5;
   angle: number;
-  pos: Pos;
+  pos: Vector;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;

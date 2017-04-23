@@ -1,5 +1,3 @@
-// import * as utils from './utils';
-
 export default class Tile {
   static rowLength = 7;
   static padding = 3;
@@ -7,14 +5,7 @@ export default class Tile {
   height: number;
   health: number;
   canHit: boolean = true;
-  pos: Pos;
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
-  closest: Pos = {
-    x: 0, y: 0
-  }
+  pos: Vector;
 
   constructor() {
     this.health = this.getRandomInt(1, 5);
@@ -32,11 +23,6 @@ export default class Tile {
       ctx.fill();
       this.drawHealth(ctx);
       ctx.closePath();
-      // ctx.beginPath();
-      // ctx.rect(this.closest.x, this.closest.y, 1, 1);
-      // ctx.fillStyle = 'red';
-      // ctx.fill();
-      // ctx.closePath();
       ctx.restore();
     }
   }
