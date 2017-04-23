@@ -7,14 +7,20 @@ export default class Ball {
   readonly height = 10;
   readonly radius = 5;
   readonly speed = 0.4;
-  alive: boolean = true;
+  alive: boolean = false;
   pos: Vector;
   ver: Vector;
   angle: number;
   lastPos: Vector;
 
-  constructor(canvas: HTMLCanvasElement, player: Player) {
+  constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
+
+    this.pos = { x: -100, y: -100 };
+    this.ver = { x: 0, y: 0 };
+  }
+
+  reset(player: Player) {
     this.pos = {
       x: player.pos.x + player.width,
       y: player.pos.y
@@ -24,6 +30,8 @@ export default class Ball {
       x: Math.cos(player.angle) * this.speed,
       y: Math.sin(player.angle) * this.speed
     };
+
+    this.alive = true;
   }
 
   update(delta: number) {

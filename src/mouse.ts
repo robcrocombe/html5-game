@@ -3,6 +3,7 @@ export default class Mouse {
   pos: Vector;
   lastClicked: Vector;
   down: boolean;
+  onClick: Function;
   onRelease: Function;
 
   constructor(canvas: HTMLCanvasElement) {
@@ -27,6 +28,9 @@ export default class Mouse {
   mousedown(e: MouseEvent) {
     this.down = true;
     this.lastClicked = this.getMousePos(e);
+    if (this.onClick) {
+      this.onClick();
+    }
   }
 
   mouseup(e: MouseEvent) {

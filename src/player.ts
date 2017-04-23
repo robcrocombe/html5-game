@@ -47,12 +47,9 @@ export default class Player {
 
     for (let i = 0; i < this.ballCount; ++i) {
       offset = (this.radius * this.distance) * i;
-      // ctx.arc(offset, 0, this.radius, 0, Math.PI * 2);
-      // ctx.fill();
       ctx.moveTo(offset + (this.radius / 2.5), -this.radius);
       ctx.lineTo(offset + (this.radius / 2.5), this.radius);
       ctx.lineTo(offset + (this.radius * 2.5), 0);
-      // ctx.fill();
     }
 
     ctx.fillStyle = '#0095DD';

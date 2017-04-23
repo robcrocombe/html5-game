@@ -53,7 +53,7 @@ export default class Tile {
   hit() {
     if (this.health > 0) {
       if (this.canHit) {
-        --this.health;
+        this.health--;
         this.canHit = false;
 
         setTimeout(() => this.canHit = true, 100);
