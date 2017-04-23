@@ -19,7 +19,6 @@ for (let i = 0; i < 14; ++i) {
 
 const balls: Ball[] = [];
 const ballSpawn: BallSpawn = {
-  start: false,
   rate: 25,
   countdown: 1,
   next: 0
@@ -33,8 +32,16 @@ game.setTilePositions(canvas, tiles);
 
 const mouse = new Mouse(canvas);
 
-mouse.onClick = () => gameState = State.PLAY_START;
-mouse.onRelease = () => gameState = State.BALL_SPAWN;
+mouse.onClick = () => {
+  if (gameState === State.IDLE) {
+    gameState = State.PLAY_START;
+  }
+};
+mouse.onRelease = () => {
+  if (gameState === State.PLAY_START) {
+    gameState = State.BALL_SPAWN;
+  }
+};
 
 function spawnBalls() {
   ballSpawn.countdown--;
@@ -46,16 +53,26 @@ function spawnBalls() {
     ballSpawn.next++;
 
     if (ballSpawn.next >= balls.length) {
+      ballSpawn.next = 0;
+      ballSpawn.countdown = 1;
       gameState = State.PLAYING;
     }
   }
 }
 
 function updateBalls(delta: number) {
+  let aliveCount = 0;
+
   for (let i = 0; i < balls.length; ++i) {
     if (balls[i].alive) {
+      aliveCount++;
       balls[i].update(delta);
     }
+  }
+
+  if (aliveCount === 0) {
+    gameState = State.IDLE;
+    balls.push(new Ball(canvas));
   }
 }
 

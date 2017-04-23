@@ -5,7 +5,6 @@ interface Vector {
 
 interface BallSpawn {
   readonly rate: number
-  start: boolean
   countdown: number
   next: number
 }
