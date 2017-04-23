@@ -1,53 +1,47 @@
-import * as Victor from 'Victor';
-import * as utils from './utils';
+// import * as Victor from 'Victor';
+// import * as utils from './utils';
 import Tile from './tile';
 import Ball from './ball';
 
 const xPadding = 150;
-const yPadding = 20;
+const yPadding = 100;
 
 export function setTilePositions(canvas: HTMLCanvasElement, tiles: Tile[]) {
   let pos: Pos = { x: xPadding, y: yPadding };
 
-  Tile.width = Math.floor((canvas.width - (xPadding * 2)) / Tile.rowLength);
-  Tile.height = Tile.width;
+  const width = Math.floor((canvas.width - (xPadding * 2)) / Tile.rowLength);
+  const height = width;
 
   for (let i = tiles.length - 1; i >= 0; --i) {
 
-    tiles[i].pos = {
-      x: pos.x,
-      y: pos.y
-    };
+    tiles[i].setPosition(pos.x, pos.y, width, height);
 
-    tiles[i].left   = Math.floor((canvas.width  - Tile.width)  / 2);
-    tiles[i].top    = Math.floor((canvas.height - Tile.height) / 2);
-    tiles[i].right  = tiles[i].left + Tile.width;
-    tiles[i].bottom = tiles[i].top  + Tile.height;
+    // tiles[i].left   = Math.floor((canvas.width  - Tile.width)  / 2);
+    // tiles[i].top    = Math.floor((canvas.height - Tile.height) / 2);
+    // tiles[i].right  = tiles[i].left + Tile.width;
+    // tiles[i].bottom = tiles[i].top  + Tile.height;
 
-    pos.x += Tile.width;
+    pos.x += width;
 
     if (i % Tile.rowLength === 0) {
       pos.x = xPadding;
-      pos.y += Tile.height;
+      pos.y += height;
     }
   }
 }
 
 export function collisionDetection(canvas: HTMLCanvasElement, tiles: Tile[], balls: Ball[]) {
-  for (let i = 0; i < tiles.length; ++i) {
-    const tile = tiles[i];
+  for (let i = 0; i < balls.length; ++i) {
+    for (let j = 0; j < tiles.length; ++j) {
+      const ball = balls[i];
+      const tile = tiles[j];
 
-    if (tile.health < 1) {
-      continue;
-    }
+      if (tile.health < 1 || ball.ver.x === 0) {
+        continue;
+      }
 
-    for (let j = 0; j < balls.length; ++j) {
-      const ball = balls[j];
-
-      if (collides6(tile, ball)) {
-        console.log('hit');
-        balls[j] = null;
-        return;
+      if (collides4(tile, ball)) {
+        collisionDetection(canvas, tiles, balls);
       }
     }
   }
@@ -62,33 +56,33 @@ export function collisionDetection(canvas: HTMLCanvasElement, tiles: Tile[], bal
 // }
 
 // function collides2(tile: Tile, ball: Ball) {
-//   const distX = Math.abs(ball.pos.x - tile.pos.x - Tile.width / 2);
-//   const distY = Math.abs(ball.pos.y - tile.pos.y - Tile.height / 2);
+//   const distX = Math.abs(ball.pos.x - tile.pos.x - tile.width / 2);
+//   const distY = Math.abs(ball.pos.y - tile.pos.y - tile.height / 2);
 
-//   if (distX > (Tile.width/2 + ball.radius)) { return false; }
-//   if (distY > (Tile.height/2 + ball.radius)) { return false; }
+//   if (distX > (tile.width/2 + ball.radius)) { return false; }
+//   if (distY > (tile.height/2 + ball.radius)) { return false; }
 
-//   if (distX <= (Tile.width/2)) { return true; }
-//   if (distY <= (Tile.height/2)) { return true; }
+//   if (distX <= (tile.width/2)) { return true; }
+//   if (distY <= (tile.height/2)) { return true; }
 
-//   const dx = distX - Tile.width / 2;
-//   const dy = distY - Tile.height / 2;
+//   const dx = distX - tile.width / 2;
+//   const dy = distY - tile.height / 2;
 //   return (dx*dx+dy*dy <= (ball.radius * ball.radius));
 // }
 
 // function collides3(tile: Tile, ball: Ball) {
 //   if (collides2(tile, ball)) {
-//     --tile.health;
+//     // --tile.health;
 //     // ball.ver.x = -ball.ver.x;
 //     // ball.ver.y = -ball.ver.y;
 
-//     const ballCenterX = ball.pos.x + ball.radius;
-//     const ballCenterY = ball.pos.y + ball.radius;
-//     const tileCenterX = tile.pos.x + (Tile.width / 2);
-//     const tileCenterY = tile.pos.y + (Tile.height / 2);
+//     const ballCenterX = ball.pos.x;
+//     const ballCenterY = ball.pos.y;
+//     const tileCenterX = tile.pos.x + (tile.width / 2);
+//     const tileCenterY = tile.pos.y + (tile.height / 2);
 
-//     const w = 0.5 * (ball.width + Tile.width);
-//     const h = 0.5 * (ball.height + Tile.height);
+//     const w = 0.5 * (ball.width + tile.width);
+//     const h = 0.5 * (ball.height + tile.height);
 //     const dx = ballCenterX - tileCenterX;
 //     const dy = ballCenterY - tileCenterY;
 
@@ -99,108 +93,165 @@ export function collisionDetection(canvas: HTMLCanvasElement, tiles: Tile[], bal
 
 //       if (wy > hx) {
 //         if (wy > -hx) {
-//            collision at the top
+//           /* collision at the top */
 //           ball.ver.y = -ball.ver.y;
+//           ball.pos.y = ball.lastPos.y;
 //         } else {
 //           /* on the left */
 //           ball.ver.x = -ball.ver.x;
+//           ball.pos.x = ball.lastPos.x;
 //         }
 //       } else {
 //         if (wy > -hx) {
 //           /* on the right */
 //           ball.ver.x = -ball.ver.x;
+//           ball.pos.x = ball.lastPos.x;
 //         } else {
 //           /* at the bottom */
 //           ball.ver.y = -ball.ver.y;
+//           ball.pos.y = ball.lastPos.y;
 //         }
 //       }
 //     }
 //   }
 // }
 
-// function collides4(tile: Tile, ball: Ball) {
-//   const c = collides5(tile, ball);
+function collides4(tile: Tile, ball: Ball) {
+  const c = collides5(tile, ball);
 
-//   if (c) {
-//     console.log(c);
+  if (c) {
+    tile.hit();
 
-//     --tile.health;
-
-//     switch(c) {
-//       case 'top':
-//       case 'bottom':
-//         ball.ver.y = -ball.ver.y;
-//         break;
-//       case 'left':
-//       case 'right':
-//         ball.ver.x = -ball.ver.x;
-//         break;
-//     }
-
-//     ball.pos = ball.lastPos;
-//   }
-// }
-
-// function collides5(r1: Tile, r2: Ball){
-//   var dx=(r1.pos.x+Tile.width/2)-(r2.pos.x+r2.radius/2);
-//   var dy=(r1.pos.y+Tile.height/2)-(r2.pos.y+r2.radius/2);
-//   var width=(Tile.width+r2.radius)/2;
-//   var height=(Tile.height+r2.radius)/2;
-//   var crossWidth=width*dy;
-//   var crossHeight=height*dx;
-//   var collision=null;
-
-//   if(Math.abs(dx)<=width && Math.abs(dy)<=height){
-//     if (crossWidth>crossHeight){
-//       collision=(crossWidth>(-crossHeight))?'bottom':'left';
-//     } else {
-//       collision=(crossWidth>-(crossHeight))?'right':'top';
-//     }
-//   }
-//   return(collision);
-// }
-
-function collides6(tile: Tile, ball: Ball) {
-  const center = new Victor(ball.pos.x, ball.pos.y);
-
-  const aabb_half_extents = new Victor(Tile.width / 2, Tile.height / 2);
-
-  const aabb_center = new Victor(tile.pos.x + aabb_half_extents.x, tile.pos.y + aabb_half_extents.y);
-
-  let difference = center.clone().subtract(aabb_center);
-
-  const clampedX = utils.clamp(difference.x, -aabb_half_extents.x, aabb_half_extents.x);
-  const clampedY = utils.clamp(difference.y, -aabb_half_extents.y, aabb_half_extents.y);
-  const clamped = new Victor(clampedX, clampedY);
-
-  const closest = aabb_center.clone().add(clamped);
-
-  difference = closest.clone().subtract(center);
-
-  if (difference.length() < ball.radius) {
-    console.log('hit ' + tile.health);
+    switch(c) {
+      case 'top':
+      case 'bottom':
+        ball.ver.y = -ball.ver.y;
+        ball.pos.y = ball.lastPos.y;
+        break;
+      case 'left':
+      case 'right':
+        ball.ver.x = -ball.ver.x;
+        ball.pos.x = ball.lastPos.x;
+        break;
+    }
   }
-
-  return false;
 }
 
-// function vectorLength(ver: Pos) {
-//   return Math.sqrt(ver.x * ver.x + ver.y * ver.y);
+function collides5(r1: Tile, r2: Ball){
+  var dx=(r1.pos.x+r1.width/2)-(r2.pos.x+r2.radius/2);
+  var dy=(r1.pos.y+r1.height/2)-(r2.pos.y+r2.radius/2);
+  var width=(r1.width+r2.radius)/2;
+  var height=(r1.height+r2.radius)/2;
+  var crossWidth=width*dy;
+  var crossHeight=height*dx;
+  var collision=null;
+
+  if(Math.abs(dx)<=width && Math.abs(dy)<=height){
+    if (crossWidth>crossHeight){
+      collision=(crossWidth>(-crossHeight))?'bottom':'left';
+    } else {
+      collision=(crossWidth>-(crossHeight))?'right':'top';
+    }
+  }
+  return(collision);
+}
+
+// function collides7(tile: Tile, ball: Ball) {
+//   const collision = collides6(tile, ball);
+
+//   if (collision) {
+//     const dir = collision.direction;
+//     const diff = collision.difference;
+
+//     console.log(dir);
+
+//     console.log('closest', collision.closest);
+//     console.log('center', collision.center);
+//     console.log('diff', diff.length());
+
+//     // if (dir === 'right') {
+//     //   ball.ver.x = 0;
+//     //   ball.ver.y = 0;
+//     // }
+
+//     if (dir === 'left' || dir === 'right') {
+//       ball.ver.x = -ball.ver.x;
+//       ball.pos.x = ball.lastPos.x;
+
+//       // const penetration = ball.radius - Math.abs(diff.x);
+
+//       // if (dir === 'left') {
+//       //   ball.pos.x += penetration;
+//       // } else {
+//       //   ball.pos.x -= penetration;
+//       // }
+//     } else {
+//       ball.ver.y = -ball.ver.y;
+//       ball.pos.y = ball.lastPos.y;
+
+//       // const penetration = ball.radius - Math.abs(diff.y);
+
+//       // if (dir === 'up') {
+//       //   ball.pos.y += penetration;
+//       // } else {
+//       //   ball.pos.y -= penetration;
+//       // }
+//     }
+
+//     // ball.ver.x = 0;
+//     // ball.ver.y = 0;
+//     console.log('health', tile.health);
+//     // --tile.health;
+//   }
 // }
 
-// function vectorDirection(ver: Pos) {
-//   const compass = [
-//     [0.0, 1.0], // Up
-//     [1.0, 0.0], // Right
-//     [0.0, -1.0], // Down
-//     [-1.0, 0.0] // Left
-//   ];
+// function collides6(tile: Tile, ball: Ball) {
+//   const center = new Victor(ball.pos.x, ball.pos.y);
+//   const aabb_half_extents = new Victor(tile.width / 2, tile.height / 2);
 
+//   const aabb_center = new Victor(tile.pos.x + aabb_half_extents.x, tile.pos.y + aabb_half_extents.y);
+
+//   let difference = center.clone().subtract(aabb_center);
+
+//   const clampedX = utils.clamp(difference.x, -aabb_half_extents.x, aabb_half_extents.x);
+//   const clampedY = utils.clamp(difference.y, -aabb_half_extents.y, aabb_half_extents.y);
+//   const clamped = new Victor(clampedX, clampedY);
+
+//   const closest = aabb_center.clone().add(clamped);
+
+//   tile.closest = {
+//     x: closest.x,
+//     y: closest.y
+//   };
+
+//   difference = closest.clone().subtract(center);
+
+//   if (difference.length() <= ball.radius) {
+//     const direction = vectorDirection(difference);
+//     // if (difference.length() === 0) {
+//     //   debugger;
+//     // }
+
+//     return { direction, difference, closest, center };
+//   }
+//   return false;
+// }
+
+// const compass = [
+//   new Victor(0.0, -1.0), // Up
+//   new Victor(1.0, 0.0), // Right
+//   new Victor(0.0, 1.0), // Down
+//   new Victor(-1.0, 0.0) // Left
+// ];
+
+// function vectorDirection(target: Pos) {
+//   const vect = new Victor(target.x, target.y);
+//   const normal = vect.normalize();
 //   let max = 0;
 //   let bestMatch = -1;
 
 //   for (let i = 0; i < 4; ++i) {
-//     let dotProduct = dotproduct(normalize(ver), compass[i]);
+//     const dotProduct = normal.dot(compass[i]);
 //     if (dotProduct > max) {
 //       max = dotProduct;
 //       bestMatch = i;
@@ -216,16 +267,57 @@ function collides6(tile: Tile, ball: Ball) {
 //   }
 // }
 
-// function dotproduct(a,b) {
-//   var n = 0, lim = Math.min(a.length,b.length);
-//   for (var i = 0; i < lim; i++) n += a[i] * b[i];
-//   return n;
+// function collides8(tile: Tile, ball: Ball) {
+//   if (collides2(tile, ball)) {
+//     const int = intersection(tile, ball);
+//     if (int) {
+//       // If we hit on the top, go up
+//       if ((ball.pos.y + ball.radius)<(int.y+(int.height/2))) {
+//         ball.ver.y = -ball.ver.y;
+//         ball.pos.y = ball.lastPos.y;
+//       }
+//       // If we hit on the bottom, go down
+//       else if ((ball.pos.y+ball.radius)>(int.y+(int.height/2))) {
+//         ball.ver.y = -ball.ver.y;
+//         ball.pos.y = ball.lastPos.y;
+//       }
+//       // If we hit on the left side, go left
+//       else if ((ball.pos.x+ball.radius)<(int.x+(int.width/2))) {
+//         ball.ver.x = -ball.ver.x;
+//         ball.pos.x = ball.lastPos.x;
+//       }
+//       // If we hit on the right side, go right
+//       else if ((ball.pos.x+ball.radius)>(int.x+(int.width/2))) {
+//         ball.ver.x = -ball.ver.x;
+//         ball.pos.x = ball.lastPos.x;
+//       }
+
+//       tile.hit();
+//       return true;
+//     }
+//   }
+//   return false;
 // }
 
-// function normalize(ver: Pos) {
-//   const normal = ver;
-//   var len = Math.sqrt(normal.x * normal.x + normal.y * normal.y)
-//   normal.x /= len;
-//   normal.y /= len;
-//   return normal;
+// function intersection(r1: Tile, r2: Ball) {
+//   const xmin = Math.max(r1.pos.x, r2.pos.x);
+//   const xmax1 = r1.pos.x + r1.width;
+//   const xmax2 = r2.pos.x + r2.width;
+//   const xmax = Math.min(xmax1, xmax2);
+//   if (xmax > xmin) {
+//     const ymin = Math.max(r1.pos.y, r2.pos.y);
+//     const ymax1 = r1.pos.y + r1.height;
+//     const ymax2 = r2.pos.y + r2.height;
+//     const ymax = Math.min(ymax1, ymax2);
+//     if (ymax > ymin) {
+//       const int = {
+//         x: xmin,
+//         y: ymin,
+//         width: xmax - xmin,
+//         height: ymax - ymin
+//       };
+//       return int;
+//     }
+//   }
+//   return false;
 // }

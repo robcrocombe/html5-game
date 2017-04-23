@@ -5,7 +5,7 @@ export default class Ball {
   readonly width = 10;
   readonly height = 10;
   readonly radius = 5;
-  readonly speed = 0.2;
+  readonly speed = 0.4;
   pos: Pos;
   ver: Pos;
   angle: number;
@@ -57,6 +57,11 @@ export default class Ball {
     ctx.beginPath();
     ctx.arc(this.pos.x, this.pos.y, this.radius, 0, Math.PI * 2);
     ctx.fillStyle = '#D32F2F';
+    ctx.fill();
+    ctx.closePath();
+    ctx.beginPath();
+    ctx.rect(this.pos.x - 1, this.pos.y -1 , 2, 2);
+    ctx.fillStyle = 'blue';
     ctx.fill();
     ctx.closePath();
     ctx.restore();

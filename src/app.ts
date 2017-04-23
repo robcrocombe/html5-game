@@ -63,6 +63,7 @@ function update(delta: number) {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   player.draw(ctx);
+
   if (ball) {
     ball.draw(ctx);
   }
