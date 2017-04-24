@@ -19,7 +19,7 @@ for (let i = 0; i < 14; ++i) {
 
 const balls: Ball[] = [];
 const ballSpawn: BallSpawn = {
-  rate: 25,
+  rate: 20,
   countdown: 1,
   next: 0
 };
@@ -60,19 +60,39 @@ function spawnBalls() {
   }
 }
 
+let firstDeadBall = null;
+let ballHomeX: number;
+
 function updateBalls(delta: number) {
   let aliveCount = 0;
 
   for (let i = 0; i < balls.length; ++i) {
-    if (balls[i].alive) {
-      aliveCount++;
-      balls[i].update(delta);
+    const ball = balls[i];
+    const playerX = firstDeadBall ? ballHomeX + player.width : null;
+
+    if (ball.alive) {
+      ball.update(delta, playerX);
+
+      if (ball.alive) {
+        aliveCount++;
+      }
+    }
+
+    if (!firstDeadBall && ball.return) {
+      firstDeadBall = ball;
+      ballHomeX = firstDeadBall.pos.x - player.width;
     }
   }
 
   if (aliveCount === 0) {
-    gameState = State.IDLE;
+    for (let i = 0; i < balls.length; ++i) {
+      balls[i].return = false;
+    }
+
     balls.push(new Ball(canvas));
+    player.pos.x = ballHomeX;
+    firstDeadBall = null;
+    gameState = State.IDLE;
   }
 }
 
@@ -83,8 +103,7 @@ export function update(delta: number) {
       break;
     case State.BALL_SPAWN:
       spawnBalls();
-      // Then..
-    case State.BALL_SPAWN:
+      // And..
     case State.PLAYING:
       updateBalls(delta);
       game.collisionDetection(canvas, tiles, balls);
@@ -109,5 +128,6 @@ export function draw(fps) {
     tiles[i].draw(ctx);
   }
 
-  utils.writeMessage(ctx, Math.round(fps));
+  // utils.writeMessage(ctx, Math.round(fps));
+  utils.writeMessage(ctx, mouse.pos.x + ', ' + mouse.pos.y);
 }

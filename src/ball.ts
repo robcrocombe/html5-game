@@ -1,4 +1,4 @@
-// import * as utils from './utils';
+import * as utils from './utils';
 import Player from './player';
 
 export default class Ball {
@@ -7,6 +7,7 @@ export default class Ball {
   readonly height = 10;
   readonly radius = 5;
   readonly speed = 0.4;
+  return: boolean = false;
   alive: boolean = false;
   pos: Vector;
   ver: Vector;
@@ -34,7 +35,22 @@ export default class Ball {
     this.alive = true;
   }
 
-  update(delta: number) {
+  returnToPlayer(delta: number, playerX: number) {
+    const distance = utils.clamp(Math.abs(this.pos.x - playerX) * 0.1, 1, 8);
+
+    if (this.pos.x > playerX + 10) {
+      this.pos.x -= Math.abs(this.ver.x) * distance * delta;
+    } else if (this.pos.x < playerX - 10) {
+      this.pos.x += Math.abs(this.ver.x) * distance * delta;
+    } else {
+      this.ver.x = 0;
+      this.pos.x = playerX;
+      // Needs to change
+      this.alive = false;
+    }
+  }
+
+  update(delta: number, playerX: number) {
     if (this.pos.x + this.ver.x > this.canvas.width - this.radius
       || this.pos.x + this.ver.x < this.radius) {
         this.ver.x = -this.ver.x;
@@ -43,11 +59,19 @@ export default class Ball {
         this.ver.y = -this.ver.y;
     }
     if (this.pos.y + this.ver.y > this.canvas.height - this.radius) {
-      this.alive = false;
-      this.ver.x = 0;
-      this.ver.y = 0;
-      return;
+      if (!this.return) {
+        this.return = true;
+        this.ver.y = 0;
+      }
+      if (playerX) {
+        this.returnToPlayer(delta, playerX);
+        return;
+      } else {
+        this.ver.x = 0;
+        this.alive = false;
+      }
     }
+
     // if (this.pos.x + this.radius > this.canvas.width
     //   || this.pos.x < this.radius) {
     //     this.angle = Math.PI - this.angle;

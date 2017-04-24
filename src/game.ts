@@ -44,7 +44,7 @@ function collides4(tile: Tile, ball: Ball) {
   const c = collides5(tile, ball);
 
   if (c) {
-    // tile.hit();
+    tile.hit();
 
     switch(c) {
       case 'top':
