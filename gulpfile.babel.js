@@ -2,6 +2,7 @@ import gulp from 'gulp';
 import gutil from 'gulp-util';
 import path from 'path';
 import webpack from 'webpack';
+import WebpackDevServer from 'webpack-dev-server';
 import { CheckerPlugin } from 'awesome-typescript-loader';
 
 let firstRun = true;
@@ -32,54 +33,38 @@ const jsConfig = {
   ]
 };
 
-function runWebpack(config, done) {
-  webpack(config, (err, stats) => {
-    if (err) {
-      gulp.emit('error', new gutil.PluginError('webpack', err));
+function jsDev() {
+  new WebpackDevServer(webpack(jsConfig), {
+    contentBase: path.join(__dirname, 'build'),
+    stats: {
+      colors: gutil.colors.supportsColor,
+      hash: false,
+      timings: false,
+      chunks: false,
+      chunkModules: false,
+      modules: false,
+      children: true,
+      version: true,
+      cached: false,
+      cachedAssets: false,
+      reasons: false,
+      source: false,
+      errorDetails: false,
     }
-
-    gutil.log(
-      '[webpack]',
-      stats.toString({
-        colors: gutil.colors.supportsColor,
-        hash: false,
-        timings: false,
-        chunks: false,
-        chunkModules: false,
-        modules: false,
-        children: true,
-        version: true,
-        cached: false,
-        cachedAssets: false,
-        reasons: false,
-        source: false,
-        errorDetails: false,
-      }),
-    );
-
-    if (firstRun) {
-      firstRun = false;
-      done();
-    }
+  }).listen(3000, 'localhost', (err) => {
+    if (err) throw new gutil.PluginError('webpack-dev-server', err);
+    gutil.log('[webpack-dev-server]', 'http://localhost:3000/');
   });
 }
 
-function jsDev(done) {
-  const config = Object.assign({
-    watch: true,
-  }, jsConfig);
-
-  runWebpack(config, done);
-}
-
-function jsProd(done) {
+function jsProd() {
   const config = Object.assign({
     plugins: [
       new webpack.optimize.UglifyJsPlugin(),
     ],
   }, jsConfig);
 
-  runWebpack(config, done);
+  webpack(config);
 }
 
 function htmlCopy() {
