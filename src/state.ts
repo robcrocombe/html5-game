@@ -2,6 +2,7 @@ import Player from './player';
 import Ball from './ball';
 import Tile from './tile';
 import Mouse from './mouse';
+import RenderCache from './render-cache';
 import * as game from './game';
 import * as utils from './utils';
 
@@ -11,6 +12,8 @@ const ctx = canvas.getContext('2d');
 let gameState = State.IDLE;
 
 const player = new Player(canvas);
+
+const tileCache = new RenderCache(canvas.width, canvas.height);
 
 const tiles: Tile[] = [];
 for (let i = 0; i < Tile.rowLength; ++i) {
@@ -100,7 +103,15 @@ function addTileLine() {
   }
 
   game.setTilePositions(canvas, tiles);
+  Tile.rerender = true;
   gameState = State.IDLE;
+}
+
+function renderTiles(ctx: CanvasRenderingContext2D) {
+  console.log('render');
+  for (let i = 0; i < tiles.length; ++i) {
+    tiles[i].draw(ctx);
+  }
 }
 
 export function update(delta: number) {
@@ -136,9 +147,7 @@ export function draw(fps) {
     balls[i].draw(ctx);
   }
 
-  for (let i = 0; i < tiles.length; ++i) {
-    tiles[i].draw(ctx);
-  }
+  Tile.rerender = tileCache.draw(ctx, Tile.rerender, renderTiles);
 
   utils.writeMessage(ctx, Math.round(fps));
   // utils.writeMessage(ctx, mouse.pos.x + ', ' + mouse.pos.y);

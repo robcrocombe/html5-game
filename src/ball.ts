@@ -45,7 +45,6 @@ export default class Ball {
     } else {
       this.ver.x = 0;
       this.pos.x = playerX;
-      // Needs to change
       this.alive = false;
     }
   }

@@ -1,6 +1,7 @@
 export default class Tile {
   static rowLength = 7;
   static padding = 3;
+  static rerender: boolean = true;
   width: number;
   height: number;
   health: number;
@@ -55,6 +56,7 @@ export default class Tile {
       if (this.canHit) {
         this.health--;
         this.canHit = false;
+        Tile.rerender = true;
 
         setTimeout(() => this.canHit = true, 100);
       }
