@@ -36,12 +36,12 @@ export default class Ball {
   }
 
   returnToPlayer(delta: number, playerX: number) {
-    const distance = utils.clamp(Math.abs(this.pos.x - playerX) * 0.1, 1, 8);
+    const distance = Math.abs(this.pos.x - playerX) * 0.1;
 
     if (this.pos.x > playerX + 10) {
-      this.pos.x -= Math.abs(this.ver.x) * distance * delta;
+      this.pos.x -= Math.floor(utils.clamp(Math.abs(this.ver.x) * distance * delta, 1, 10));
     } else if (this.pos.x < playerX - 10) {
-      this.pos.x += Math.abs(this.ver.x) * distance * delta;
+      this.pos.x += Math.floor(utils.clamp(Math.abs(this.ver.x) * distance * delta, 1, 10));
     } else {
       this.ver.x = 0;
       this.pos.x = playerX;
@@ -57,7 +57,7 @@ export default class Ball {
     if (this.pos.y + this.ver.y < this.radius) {
         this.ver.y = -this.ver.y;
     }
-    if (this.pos.y + this.ver.y > this.canvas.height - this.radius) {
+    if (this.pos.y + this.ver.y >= this.canvas.height - this.radius) {
       if (!this.return) {
         this.return = true;
         this.ver.y = 0;
@@ -85,8 +85,8 @@ export default class Ball {
       y: this.pos.y
     };
 
-    this.pos.x += this.ver.x * delta;
-    this.pos.y += this.ver.y * delta;
+    this.pos.x += Math.floor(this.ver.x * delta);
+    this.pos.y += Math.floor(this.ver.y * delta);
     // const xunits = Math.cos(this.angle) * this.speed;
     // const yunits = Math.sin(this.angle) * this.speed;
     // this.pos.x += xunits;
@@ -97,7 +97,7 @@ export default class Ball {
     ctx.save();
     ctx.beginPath();
     ctx.arc(this.pos.x, this.pos.y, this.radius, 0, Math.PI * 2);
-    ctx.fillStyle = '#D32F2F';
+    ctx.fillStyle = '#F44336';
     ctx.fill();
     ctx.closePath();
     ctx.restore();

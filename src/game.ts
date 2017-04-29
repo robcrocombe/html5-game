@@ -1,4 +1,5 @@
 import Tile from './tile';
+import MobTile from './mob-tile';
 import Ball from './ball';
 
 const xPadding = 150;
@@ -27,7 +28,7 @@ export function collisionDetection(canvas: HTMLCanvasElement, tiles: Tile[], bal
   for (let i = 0; i < balls.length; ++i) {
     for (let j = 0; j < tiles.length; ++j) {
       const ball = balls[i];
-      const tile = tiles[j];
+      const tile = tiles[j] as MobTile;
 
       if (tile.health < 1 || ball.ver.x === 0) {
         continue;

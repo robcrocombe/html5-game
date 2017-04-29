@@ -1,6 +1,6 @@
 export function writeMessage(ctx: CanvasRenderingContext2D, message: any) {
   ctx.font = '15pt Calibri';
-  ctx.fillStyle = 'black';
+  ctx.fillStyle = '#fff';
   ctx.fillText(message, 10, 25);
 }
 

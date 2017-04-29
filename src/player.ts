@@ -53,7 +53,7 @@ export default class Player {
     ctx.rotate(this.angle);
 
     for (let i = 0; i < this.ballCount; ++i) {
-      offset = (this.radius * this.distance) * i;
+      offset = Math.floor((this.radius * this.distance) * i);
       ctx.moveTo(offset + (this.radius / 2.5), -this.radius);
       ctx.lineTo(offset + (this.radius / 2.5), this.radius);
       ctx.lineTo(offset + (this.radius * 2.5), 0);

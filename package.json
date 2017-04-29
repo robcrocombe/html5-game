@@ -30,7 +30,8 @@
     "stylelint": "^7.10.1",
     "stylelint-config-standard": "^16.0.0",
     "tslint": "^5.1.0",
-    "typescript": "^2.2.2",
+    "tsutils": "^1.8.0",
+    "typescript": "^2.3.2",
     "victor": "^1.1.0",
     "webpack": "^2.4.1",
     "webpack-dev-server": "^2.4.4"

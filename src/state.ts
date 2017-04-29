@@ -1,6 +1,7 @@
 import Player from './player';
 import Ball from './ball';
 import Tile from './tile';
+import MobTile from './mob-tile';
 import Mouse from './mouse';
 import RenderCache from './render-cache';
 import * as game from './game';
@@ -18,7 +19,7 @@ const playerCache = new RenderCache(canvas.width, canvas.height);
 
 const tiles: Tile[] = [];
 for (let i = 0; i < Tile.rowLength; ++i) {
-  tiles.push(new Tile());
+  tiles.push(new MobTile());
 }
 
 game.setTilePositions(canvas, tiles);
@@ -100,7 +101,7 @@ function updateBalls(delta: number) {
 
 function addTileLine() {
   for (let i = 0; i < Tile.rowLength; ++i) {
-    tiles.push(new Tile());
+    tiles.push(new MobTile());
   }
 
   game.setTilePositions(canvas, tiles);
