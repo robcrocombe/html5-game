@@ -2,6 +2,7 @@ import Player from './player';
 import Ball from './ball';
 import Tile from './tile';
 import MobTile from './mob-tile';
+import BallTile from './ball-tile';
 import Mouse from './mouse';
 import RenderCache from './render-cache';
 import * as game from './game';
@@ -18,11 +19,8 @@ const tileCache = new RenderCache(canvas.width, canvas.height);
 const playerCache = new RenderCache(canvas.width, canvas.height);
 
 const tiles: Tile[] = [];
-for (let i = 0; i < Tile.rowLength; ++i) {
-  tiles.push(new MobTile());
-}
 
-game.setTilePositions(canvas, tiles);
+addTileLine();
 
 const balls: Ball[] = [];
 const ballSpawn: BallSpawn = {
@@ -100,8 +98,15 @@ function updateBalls(delta: number) {
 }
 
 function addTileLine() {
+  // const ballTilePos = utils.getRandomInt(0, Tile.rowLength - 1);
+  const ballTilePos = -1;
+
   for (let i = 0; i < Tile.rowLength; ++i) {
-    tiles.push(new MobTile());
+    if (i === ballTilePos) {
+      tiles.push(new BallTile());
+    } else {
+      tiles.push(new MobTile());
+    }
   }
 
   game.setTilePositions(canvas, tiles);
@@ -123,11 +128,11 @@ export function update(delta: number) {
     case State.BALL_SPAWN:
       spawnBalls();
       updateBalls(delta);
-      game.collisionDetection(canvas, tiles, balls);
+      game.collisionDetection(tiles, balls);
       break;
     case State.PLAYING:
       updateBalls(delta);
-      game.collisionDetection(canvas, tiles, balls);
+      game.collisionDetection(tiles, balls);
       break;
     case State.NEW_LINE:
       addTileLine();

@@ -1,4 +1,5 @@
 import Tile from './tile';
+import { getRandomInt } from './utils';
 
 export default class MobTile extends Tile {
   health: number;
@@ -6,7 +7,7 @@ export default class MobTile extends Tile {
 
   constructor() {
     super();
-    this.health = this.getRandomInt(1, 5);
+    this.health = getRandomInt(1, 5);
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -27,12 +28,6 @@ export default class MobTile extends Tile {
     ctx.textAlign = 'center';
     ctx.fillStyle = '#fff';
     ctx.fillText(this.health.toString(), this.pos.x + (this.width / 2), this.pos.y + (this.height / 1.61));
-  }
-
-  getRandomInt(min: number, max: number): number {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.round(Math.floor(Math.random() * (max - min + 1)) + min);
   }
 
   hit() {

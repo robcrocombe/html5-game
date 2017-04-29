@@ -4,9 +4,15 @@ import Ball from './ball';
 
 const xPadding = 150;
 const yPadding = 100;
+let tileHeights: number[];
+let tileRows: Tile[][];
 
 export function setTilePositions(canvas: HTMLCanvasElement, tiles: Tile[]) {
   let pos: Vector = { x: xPadding, y: yPadding };
+  tileHeights = [];
+  tileRows = [];
+  tileRows.push([]);
+  let rowIndex = 0;
 
   const width = Math.floor((canvas.width - (xPadding * 2)) / Tile.rowLength);
   const height = width;
@@ -17,26 +23,48 @@ export function setTilePositions(canvas: HTMLCanvasElement, tiles: Tile[]) {
 
     pos.x += width;
 
+    tileRows[rowIndex].push(tiles[i]);
+
     if (i % Tile.rowLength === 0) {
       pos.x = xPadding;
       pos.y += height;
+
+      tileHeights.push(pos.y);
+      tileRows.push([]);
+      rowIndex++;
     }
   }
 }
 
-export function collisionDetection(canvas: HTMLCanvasElement, tiles: Tile[], balls: Ball[]) {
+export function collisionDetection(tiles: Tile[], balls: Ball[]) {
   for (let i = 0; i < balls.length; ++i) {
-    for (let j = 0; j < tiles.length; ++j) {
-      const ball = balls[i];
-      const tile = tiles[j] as MobTile;
+    const ball = balls[i];
+    // checkTileCollision(tiles, balls, ball);
+    checkBallWithinTileRow(tiles, balls, ball);
+  }
+}
 
-      if (tile.health < 1 || ball.ver.x === 0) {
-        continue;
-      }
+function checkBallWithinTileRow(tiles: Tile[], balls: Ball[], ball: Ball) {
+  for (let i = 0; i < tileHeights.length; ++i) {
+    if (ball.pos.y <= tileHeights[i]) {
+      const row = tileRows[i];
 
-      if (collides4(tile, ball)) {
-        collisionDetection(canvas, tiles, balls);
-      }
+      checkTileCollision(row, balls, ball);
+    }
+  }
+}
+
+function checkTileCollision(tiles: Tile[], balls: Ball[], ball: Ball) {
+  for (let j = 0; j < tiles.length; ++j) {
+
+    const tile = tiles[j] as MobTile;
+
+    if (tile.health < 1 || ball.ver.x === 0) {
+      continue;
+    }
+
+    if (collides4(tile, ball)) {
+      collisionDetection(tiles, balls);
     }
   }
 }

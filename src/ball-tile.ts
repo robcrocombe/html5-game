@@ -7,7 +7,7 @@ export default class BallTile extends Tile {
     ctx.save();
     ctx.beginPath();
     ctx.arc(this.pos.x, this.pos.y, this.radius, 0, Math.PI * 2);
-    ctx.fillStyle = '#D32F2F';
+    ctx.fillStyle = '#fff';
     ctx.fill();
     ctx.closePath();
     ctx.restore();

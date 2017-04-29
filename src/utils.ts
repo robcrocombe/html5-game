@@ -11,3 +11,9 @@ export function clamp(val: number, min: number, max: number): number {
 export function distance(p1: Vector, p2: Vector): number {
   return Math.hypot(p2.x - p1.x, p2.y - p1.y);
 }
+
+export function getRandomInt(min: number, max: number): number {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.round(Math.floor(Math.random() * (max - min + 1)) + min);
+}
