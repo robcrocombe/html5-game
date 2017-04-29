@@ -6,6 +6,7 @@ export default class Player {
   readonly width = 90;
   readonly height = 10;
   readonly radius = 5;
+  rerender = true;
   ballCount = 10;
   distance = 5;
   angle: number;
@@ -25,10 +26,16 @@ export default class Player {
       const targetY  = mouse.pos.y - this.pos.y;
       const rotation = Math.atan2(targetY, targetX);
 
+      const lastAngle = this.angle;
+
       if (rotation > 0) {
         this.angle = Math.PI + rotation;
       } else {
         this.angle = rotation;
+      }
+
+      if (lastAngle !== this.angle) {
+        this.rerender = true;
       }
 
       let dist = utils.distance(mouse.lastClicked, mouse.pos);

@@ -14,6 +14,7 @@ let gameState = State.IDLE;
 const player = new Player(canvas);
 
 const tileCache = new RenderCache(canvas.width, canvas.height);
+const playerCache = new RenderCache(canvas.width, canvas.height);
 
 const tiles: Tile[] = [];
 for (let i = 0; i < Tile.rowLength; ++i) {
@@ -108,7 +109,6 @@ function addTileLine() {
 }
 
 function renderTiles(ctx: CanvasRenderingContext2D) {
-  console.log('render');
   for (let i = 0; i < tiles.length; ++i) {
     tiles[i].draw(ctx);
   }
@@ -139,7 +139,8 @@ export function draw(fps) {
 
   switch (gameState) {
     case State.PLAY_START:
-      player.draw(ctx);
+      player.rerender = playerCache.draw(
+        ctx, player.rerender, player.draw.bind(player));
       break;
   }
 
