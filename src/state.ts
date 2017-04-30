@@ -2,7 +2,7 @@ import Player from './player';
 import Ball from './ball';
 import Tile from './tile';
 import MobTile from './mob-tile';
-import BallTile from './ball-tile';
+import PowerTile from './power-tile';
 import Mouse from './mouse';
 import RenderCache from './render-cache';
 import * as game from './game';
@@ -90,7 +90,6 @@ function updateBalls(delta: number) {
       balls[i].return = false;
     }
 
-    balls.push(new Ball(canvas));
     player.pos.x = ballHomeX;
     firstDeadBall = null;
     gameState = State.NEW_LINE;
@@ -98,12 +97,12 @@ function updateBalls(delta: number) {
 }
 
 function addTileLine() {
-  // const ballTilePos = utils.getRandomInt(0, Tile.rowLength - 1);
-  const ballTilePos = -1;
+  const pwrTilePos = utils.getRandomInt(0, Tile.rowLength - 1);
+  // const pwrTilePos = -1;
 
   for (let i = 0; i < Tile.rowLength; ++i) {
-    if (i === ballTilePos) {
-      tiles.push(new BallTile());
+    if (i === pwrTilePos) {
+      tiles.push(new PowerTile());
     } else {
       tiles.push(new MobTile());
     }

@@ -85,8 +85,8 @@ export default class Ball {
       y: this.pos.y
     };
 
-    this.pos.x += Math.floor(this.ver.x * delta);
-    this.pos.y += Math.floor(this.ver.y * delta);
+    this.pos.x += Math.ceil(this.ver.x * delta);
+    this.pos.y += Math.ceil(this.ver.y * delta);
     // const xunits = Math.cos(this.angle) * this.speed;
     // const yunits = Math.sin(this.angle) * this.speed;
     // this.pos.x += xunits;

@@ -2,7 +2,7 @@ import Tile from './tile';
 import { getRandomInt } from './utils';
 
 export default class MobTile extends Tile {
-  health: number;
+  readonly isMob = true;
   canHit: boolean = true;
 
   constructor() {

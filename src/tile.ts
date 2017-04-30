@@ -2,6 +2,8 @@ export default abstract class Tile {
   static rowLength = 7;
   static padding = 3;
   static rerender: boolean = true;
+  abstract readonly isMob: boolean;
+  health: number;
   width: number;
   height: number;
   pos: Vector;

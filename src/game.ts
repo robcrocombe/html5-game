@@ -1,5 +1,6 @@
 import Tile from './tile';
 import MobTile from './mob-tile';
+import PowerTile from './power-tile';
 import Ball from './ball';
 
 const xPadding = 150;
@@ -57,19 +58,21 @@ function checkBallWithinTileRow(tiles: Tile[], balls: Ball[], ball: Ball) {
 function checkTileCollision(tiles: Tile[], balls: Ball[], ball: Ball) {
   for (let j = 0; j < tiles.length; ++j) {
 
-    const tile = tiles[j] as MobTile;
+    const tile = tiles[j];
 
     if (tile.health < 1 || ball.ver.x === 0) {
       continue;
     }
 
-    if (collides4(tile, ball)) {
-      collisionDetection(tiles, balls);
+    if (tile.isMob) {
+      collides4(tile as MobTile, ball);
+    } else {
+      circularCollision(tile as PowerTile, ball);
     }
   }
 }
 
-function collides4(tile: Tile, ball: Ball) {
+function collides4(tile: MobTile, ball: Ball) {
   const c = collides5(tile, ball);
 
   if (c) {
@@ -90,7 +93,7 @@ function collides4(tile: Tile, ball: Ball) {
   }
 }
 
-function collides5(tile: Tile, ball: Ball) {
+function collides5(tile: Tile, ball: Ball): string {
   const dx = (tile.pos.x + tile.width/2) - (ball.pos.x + ball.radius / 2);
   const dy = (tile.pos.y + tile.height/2) - (ball.pos.y + ball.radius / 2);
   const width = (tile.width + ball.radius) / 2;
@@ -107,4 +110,15 @@ function collides5(tile: Tile, ball: Ball) {
     }
   }
   return collision;
+}
+
+function circularCollision(pwrTile: PowerTile, ball: Ball) {
+  const dx = pwrTile.pos.x - ball.pos.x;
+  const dy = pwrTile.pos.y - ball.pos.y;
+  const radii = ball.radius + pwrTile.radius;
+
+  if ((dx * dx) + (dy * dy) < radii * radii) {
+    pwrTile.hit();
+    // balls++ for next round
+  }
 }
