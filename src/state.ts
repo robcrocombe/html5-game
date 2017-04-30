@@ -1,8 +1,9 @@
 import Player from './player';
-import Ball from './ball';
+import PlayerBall from './player-ball';
 import Tile from './tile';
 import MobTile from './mob-tile';
 import PowerTile from './power-tile';
+import PowerBall from './power-ball';
 import Mouse from './mouse';
 import RenderCache from './render-cache';
 import * as game from './game';
@@ -19,17 +20,18 @@ const tileCache = new RenderCache(canvas.width, canvas.height);
 const playerCache = new RenderCache(canvas.width, canvas.height);
 
 const tiles: Tile[] = [];
+const powerBalls: PowerBall[] = [];
 
 addTileLine();
 
-const balls: Ball[] = [];
+const balls: PlayerBall[] = [];
 const ballSpawn: BallSpawn = {
   rate: 20,
   countdown: 1,
   next: 0
 };
 
-balls.push(new Ball(canvas));
+balls.push(new PlayerBall(canvas));
 
 let nextRoundBalls = 0;
 
@@ -93,13 +95,19 @@ function updateBalls(delta: number) {
     }
 
     for (let i = 0; i < nextRoundBalls; ++i) {
-      balls.push(new Ball(canvas));
+      balls.push(new PlayerBall(canvas));
     }
 
     player.pos.x = ballHomeX;
     firstDeadBall = null;
     nextRoundBalls = 0;
     gameState = State.NEW_LINE;
+  }
+}
+
+function updatePowerBalls(delta: number) {
+  for (let i = 0; i < powerBalls.length; ++i) {
+    powerBalls[i].update(delta);
   }
 }
 
@@ -120,7 +128,7 @@ function addTileLine() {
   gameState = State.IDLE;
 }
 
-function tileHit(tile: Tile, ball: Ball, direction?: string) {
+function tileHit(tile: Tile, ball: PlayerBall, direction?: string) {
   tile.hit();
 
   if (direction) {
@@ -138,6 +146,11 @@ function tileHit(tile: Tile, ball: Ball, direction?: string) {
     }
   } else {
     nextRoundBalls++;
+    const pos: Vector = {
+      x: tile.pos.x,
+      y: tile.pos.y
+    }
+    powerBalls.push(new PowerBall(canvas, pos));
   }
 }
 
@@ -160,6 +173,7 @@ export function update(delta: number) {
     case State.PLAYING:
       updateBalls(delta);
       game.collisionDetection(tiles, balls, tileHit);
+      updatePowerBalls(delta);
       break;
     case State.NEW_LINE:
       addTileLine();
@@ -179,6 +193,10 @@ export function draw(fps) {
 
   for (let i = 0; i < balls.length; ++i) {
     balls[i].draw(ctx);
+  }
+
+  for (let i = 0; i < powerBalls.length; ++i) {
+    powerBalls[i].draw(ctx);
   }
 
   Tile.rerender = tileCache.draw(ctx, Tile.rerender, renderTiles);

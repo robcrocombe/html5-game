@@ -1,10 +1,10 @@
 import Tile from './tile';
 import MobTile from './mob-tile';
 import PowerTile from './power-tile';
-import Ball from './ball';
+import PlayerBall from './player-ball';
 
 interface IHitFunc {
-  (tile: Tile, ball: Ball, direction?: string)
+  (tile: Tile, ball: PlayerBall, direction?: string)
 }
 
 const xPadding = 150;
@@ -41,7 +41,7 @@ export function setTilePositions(canvas: HTMLCanvasElement, tiles: Tile[]) {
   }
 }
 
-export function collisionDetection(tiles: Tile[], balls: Ball[], hit: IHitFunc) {
+export function collisionDetection(tiles: Tile[], balls: PlayerBall[], hit: IHitFunc) {
   for (let i = 0; i < balls.length; ++i) {
     const ball = balls[i];
     // checkTileCollision(tiles, balls, ball);
@@ -49,7 +49,7 @@ export function collisionDetection(tiles: Tile[], balls: Ball[], hit: IHitFunc) 
   }
 }
 
-function checkBallWithinTileRow(tiles: Tile[], balls: Ball[], ball: Ball, hit: IHitFunc) {
+function checkBallWithinTileRow(tiles: Tile[], balls: PlayerBall[], ball: PlayerBall, hit: IHitFunc) {
   for (let i = 0; i < tileHeights.length; ++i) {
     if (ball.pos.y <= tileHeights[i]) {
       const row = tileRows[i];
@@ -59,7 +59,7 @@ function checkBallWithinTileRow(tiles: Tile[], balls: Ball[], ball: Ball, hit: I
   }
 }
 
-function checkTileCollision(tiles: Tile[], balls: Ball[], ball: Ball, hit: IHitFunc) {
+function checkTileCollision(tiles: Tile[], balls: PlayerBall[], ball: PlayerBall, hit: IHitFunc) {
   for (let j = 0; j < tiles.length; ++j) {
 
     const tile = tiles[j];
@@ -76,7 +76,7 @@ function checkTileCollision(tiles: Tile[], balls: Ball[], ball: Ball, hit: IHitF
   }
 }
 
-function collides4(tile: MobTile, ball: Ball, hit: IHitFunc) {
+function collides4(tile: MobTile, ball: PlayerBall, hit: IHitFunc) {
   const dir = collides5(tile, ball);
 
   if (dir) {
@@ -84,7 +84,7 @@ function collides4(tile: MobTile, ball: Ball, hit: IHitFunc) {
   }
 }
 
-function collides5(tile: Tile, ball: Ball): string {
+function collides5(tile: Tile, ball: PlayerBall): string {
   const dx = (tile.pos.x + tile.width/2) - (ball.pos.x + ball.radius / 2);
   const dy = (tile.pos.y + tile.height/2) - (ball.pos.y + ball.radius / 2);
   const width = (tile.width + ball.radius) / 2;
@@ -103,7 +103,7 @@ function collides5(tile: Tile, ball: Ball): string {
   return collision;
 }
 
-function circularCollision(tile: PowerTile, ball: Ball, hit: IHitFunc) {
+function circularCollision(tile: PowerTile, ball: PlayerBall, hit: IHitFunc) {
   const dx = tile.pos.x - ball.pos.x;
   const dy = tile.pos.y - ball.pos.y;
   const radii = ball.radius + tile.radius;
