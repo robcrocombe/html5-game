@@ -19,9 +19,9 @@ export default abstract class Ball {
     const distance = Math.abs(this.pos.x - playerX) * 0.1;
 
     if (this.pos.x > playerX + 10) {
-      this.pos.x -= Math.floor(utils.clamp(Math.abs(this.ver.x) * distance * delta, 1, 10));
+      this.pos.x -= Math.ceil(utils.clamp(Math.abs(this.ver.x) * distance * delta, 1, 10));
     } else if (this.pos.x < playerX - 10) {
-      this.pos.x += Math.floor(utils.clamp(Math.abs(this.ver.x) * distance * delta, 1, 10));
+      this.pos.x += Math.ceil(utils.clamp(Math.abs(this.ver.x) * distance * delta, 1, 10));
     } else {
       this.ver.x = 0;
       this.pos.x = playerX;

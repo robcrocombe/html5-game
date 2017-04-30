@@ -7,13 +7,20 @@ export default class PowerBall extends Ball {
   constructor(canvas: HTMLCanvasElement, pos: Vector) {
     super(canvas);
 
+    this.alive = true;
     this.pos = pos;
     this.ver = { x: 0, y: this.speed };
   }
 
-  update(delta: number) {
+  update(delta: number, playerX?: number) {
     if (this.pos.y + this.ver.y >= this.canvas.height - this.radius) {
       this.ver.y = 0;
+      this.ver.x = this.speed;
+
+      if (playerX) {
+        this.returnToPlayer(delta, playerX);
+        return;
+      }
     }
 
     this.pos.y += Math.ceil(this.ver.y * delta);

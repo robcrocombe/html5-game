@@ -1,7 +1,7 @@
 import Player from './player';
 import PlayerBall from './player-ball';
 import Tile from './tile';
-import MobTile from './mob-tile';
+// import MobTile from './mob-tile';
 import PowerTile from './power-tile';
 import PowerBall from './power-ball';
 import Mouse from './mouse';
@@ -20,7 +20,7 @@ const tileCache = new RenderCache(canvas.width, canvas.height);
 const playerCache = new RenderCache(canvas.width, canvas.height);
 
 const tiles: Tile[] = [];
-const powerBalls: PowerBall[] = [];
+let powerBalls: PowerBall[] = [];
 
 addTileLine();
 
@@ -94,20 +94,42 @@ function updateBalls(delta: number) {
       balls[i].return = false;
     }
 
-    for (let i = 0; i < nextRoundBalls; ++i) {
-      balls.push(new PlayerBall(canvas));
-    }
-
     player.pos.x = ballHomeX;
+    ballHomeX = ballHomeX + player.width;
     firstDeadBall = null;
-    nextRoundBalls = 0;
-    gameState = State.NEW_LINE;
+    gameState = State.PWR_RETURN;
   }
 }
 
 function updatePowerBalls(delta: number) {
   for (let i = 0; i < powerBalls.length; ++i) {
     powerBalls[i].update(delta);
+  }
+}
+
+function returnPowerBalls(delta: number, homePosX: number) {
+  if (powerBalls.length) {
+    let aliveCount = 0;
+
+    for (let i = 0; i < powerBalls.length; ++i) {
+      powerBalls[i].update(delta, homePosX);
+
+      if (powerBalls[i].alive) {
+        aliveCount++;
+      }
+    }
+
+    if (aliveCount === 0) {
+      for (let i = 0; i < nextRoundBalls; ++i) {
+        balls.push(new PlayerBall(canvas));
+      }
+
+      powerBalls = [];
+      nextRoundBalls = 0;
+      gameState = State.NEW_LINE;
+    }
+  } else {
+    gameState = State.NEW_LINE;
   }
 }
 
@@ -119,7 +141,7 @@ function addTileLine() {
     if (i === pwrTilePos) {
       tiles.push(new PowerTile());
     } else {
-      tiles.push(new MobTile());
+      tiles.push(new PowerTile());
     }
   }
 
@@ -169,11 +191,15 @@ export function update(delta: number) {
       spawnBalls();
       updateBalls(delta);
       game.collisionDetection(tiles, balls, tileHit);
+      updatePowerBalls(delta);
       break;
     case State.PLAYING:
       updateBalls(delta);
       game.collisionDetection(tiles, balls, tileHit);
       updatePowerBalls(delta);
+      break;
+    case State.PWR_RETURN:
+      returnPowerBalls(delta, ballHomeX);
       break;
     case State.NEW_LINE:
       addTileLine();
@@ -191,12 +217,12 @@ export function draw(fps) {
       break;
   }
 
-  for (let i = 0; i < balls.length; ++i) {
-    balls[i].draw(ctx);
-  }
-
   for (let i = 0; i < powerBalls.length; ++i) {
     powerBalls[i].draw(ctx);
+  }
+
+  for (let i = 0; i < balls.length; ++i) {
+    balls[i].draw(ctx);
   }
 
   Tile.rerender = tileCache.draw(ctx, Tile.rerender, renderTiles);
