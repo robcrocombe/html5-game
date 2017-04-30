@@ -3,6 +3,10 @@ import MobTile from './mob-tile';
 import PowerTile from './power-tile';
 import Ball from './ball';
 
+interface IHitFunc {
+  (tile: Tile, ball: Ball, direction?: string)
+}
+
 const xPadding = 150;
 const yPadding = 100;
 let tileHeights: number[];
@@ -37,25 +41,25 @@ export function setTilePositions(canvas: HTMLCanvasElement, tiles: Tile[]) {
   }
 }
 
-export function collisionDetection(tiles: Tile[], balls: Ball[]) {
+export function collisionDetection(tiles: Tile[], balls: Ball[], hit: IHitFunc) {
   for (let i = 0; i < balls.length; ++i) {
     const ball = balls[i];
     // checkTileCollision(tiles, balls, ball);
-    checkBallWithinTileRow(tiles, balls, ball);
+    checkBallWithinTileRow(tiles, balls, ball, hit);
   }
 }
 
-function checkBallWithinTileRow(tiles: Tile[], balls: Ball[], ball: Ball) {
+function checkBallWithinTileRow(tiles: Tile[], balls: Ball[], ball: Ball, hit: IHitFunc) {
   for (let i = 0; i < tileHeights.length; ++i) {
     if (ball.pos.y <= tileHeights[i]) {
       const row = tileRows[i];
 
-      checkTileCollision(row, balls, ball);
+      checkTileCollision(row, balls, ball, hit);
     }
   }
 }
 
-function checkTileCollision(tiles: Tile[], balls: Ball[], ball: Ball) {
+function checkTileCollision(tiles: Tile[], balls: Ball[], ball: Ball, hit: IHitFunc) {
   for (let j = 0; j < tiles.length; ++j) {
 
     const tile = tiles[j];
@@ -65,31 +69,18 @@ function checkTileCollision(tiles: Tile[], balls: Ball[], ball: Ball) {
     }
 
     if (tile.isMob) {
-      collides4(tile as MobTile, ball);
+      collides4(tile as MobTile, ball, hit);
     } else {
-      circularCollision(tile as PowerTile, ball);
+      circularCollision(tile as PowerTile, ball, hit);
     }
   }
 }
 
-function collides4(tile: MobTile, ball: Ball) {
-  const c = collides5(tile, ball);
+function collides4(tile: MobTile, ball: Ball, hit: IHitFunc) {
+  const dir = collides5(tile, ball);
 
-  if (c) {
-    tile.hit();
-
-    switch(c) {
-      case 'top':
-      case 'bottom':
-        ball.ver.y = -ball.ver.y;
-        ball.pos.y = ball.lastPos.y;
-        break;
-      case 'left':
-      case 'right':
-        ball.ver.x = -ball.ver.x;
-        ball.pos.x = ball.lastPos.x;
-        break;
-    }
+  if (dir) {
+    hit(tile, ball, dir);
   }
 }
 
@@ -112,13 +103,12 @@ function collides5(tile: Tile, ball: Ball): string {
   return collision;
 }
 
-function circularCollision(pwrTile: PowerTile, ball: Ball) {
-  const dx = pwrTile.pos.x - ball.pos.x;
-  const dy = pwrTile.pos.y - ball.pos.y;
-  const radii = ball.radius + pwrTile.radius;
+function circularCollision(tile: PowerTile, ball: Ball, hit: IHitFunc) {
+  const dx = tile.pos.x - ball.pos.x;
+  const dy = tile.pos.y - ball.pos.y;
+  const radii = ball.radius + tile.radius;
 
   if ((dx * dx) + (dy * dy) < radii * radii) {
-    pwrTile.hit();
-    // balls++ for next round
+    hit(tile, ball);
   }
 }

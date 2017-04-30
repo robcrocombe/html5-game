@@ -31,6 +31,8 @@ const ballSpawn: BallSpawn = {
 
 balls.push(new Ball(canvas));
 
+let nextRoundBalls = 0;
+
 const mouse = new Mouse(canvas);
 
 mouse.onClick = () => {
@@ -90,8 +92,13 @@ function updateBalls(delta: number) {
       balls[i].return = false;
     }
 
+    for (let i = 0; i < nextRoundBalls; ++i) {
+      balls.push(new Ball(canvas));
+    }
+
     player.pos.x = ballHomeX;
     firstDeadBall = null;
+    nextRoundBalls = 0;
     gameState = State.NEW_LINE;
   }
 }
@@ -113,6 +120,27 @@ function addTileLine() {
   gameState = State.IDLE;
 }
 
+function tileHit(tile: Tile, ball: Ball, direction?: string) {
+  tile.hit();
+
+  if (direction) {
+    switch(direction) {
+      case 'top':
+      case 'bottom':
+        ball.ver.y = -ball.ver.y;
+        ball.pos.y = ball.lastPos.y;
+        break;
+      case 'left':
+      case 'right':
+        ball.ver.x = -ball.ver.x;
+        ball.pos.x = ball.lastPos.x;
+        break;
+    }
+  } else {
+    nextRoundBalls++;
+  }
+}
+
 function renderTiles(ctx: CanvasRenderingContext2D) {
   for (let i = 0; i < tiles.length; ++i) {
     tiles[i].draw(ctx);
@@ -127,11 +155,11 @@ export function update(delta: number) {
     case State.BALL_SPAWN:
       spawnBalls();
       updateBalls(delta);
-      game.collisionDetection(tiles, balls);
+      game.collisionDetection(tiles, balls, tileHit);
       break;
     case State.PLAYING:
       updateBalls(delta);
-      game.collisionDetection(tiles, balls);
+      game.collisionDetection(tiles, balls, tileHit);
       break;
     case State.NEW_LINE:
       addTileLine();

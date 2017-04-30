@@ -3,9 +3,9 @@ import Player from './player';
 
 export default class Ball {
   readonly canvas: HTMLCanvasElement;
-  readonly width = 10;
-  readonly height = 10;
-  readonly radius = 5;
+  readonly width = 12;
+  readonly height = 12;
+  readonly radius = 6;
   readonly speed = 0.4;
   return: boolean = false;
   alive: boolean = false;

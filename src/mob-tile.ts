@@ -24,10 +24,15 @@ export default class MobTile extends Tile {
   }
 
   drawHealth(ctx: CanvasRenderingContext2D) {
+    const pos: Vector = {
+      x: Math.floor(this.pos.x + (this.width / 2)),
+      y: Math.floor(this.pos.y + (this.height / 1.61))
+    };
+
     ctx.font = 'bold 16pt sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#fff';
-    ctx.fillText(this.health.toString(), this.pos.x + (this.width / 2), this.pos.y + (this.height / 1.61));
+    ctx.fillStyle = '#1c2429';
+    ctx.fillText(this.health.toString(), pos.x, pos.y);
   }
 
   hit() {
