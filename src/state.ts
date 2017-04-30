@@ -1,7 +1,7 @@
 import Player from './player';
 import PlayerBall from './player-ball';
 import Tile from './tile';
-// import MobTile from './mob-tile';
+import MobTile from './mob-tile';
 import PowerTile from './power-tile';
 import PowerBall from './power-ball';
 import Mouse from './mouse';
@@ -141,7 +141,7 @@ function addTileLine() {
     if (i === pwrTilePos) {
       tiles.push(new PowerTile());
     } else {
-      tiles.push(new PowerTile());
+      tiles.push(new MobTile());
     }
   }
 

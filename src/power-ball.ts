@@ -16,6 +16,7 @@ export default class PowerBall extends Ball {
     if (this.pos.y + this.ver.y >= this.canvas.height - this.radius) {
       this.ver.y = 0;
       this.ver.x = this.speed;
+      this.pos.y = this.canvas.height - this.radius;
 
       if (playerX) {
         this.returnToPlayer(delta, playerX);

@@ -38,6 +38,7 @@ export default class PlayerBall extends Ball {
       if (!this.return) {
         this.return = true;
         this.ver.y = 0;
+        this.pos.y = this.canvas.height - this.radius;
       }
       if (playerX) {
         this.returnToPlayer(delta, playerX);
@@ -62,8 +63,8 @@ export default class PlayerBall extends Ball {
       y: this.pos.y
     };
 
-    this.pos.x += Math.ceil(this.ver.x * delta);
-    this.pos.y += Math.ceil(this.ver.y * delta);
+    this.pos.x += this.ver.x * delta;
+    this.pos.y += this.ver.y * delta;
     // const xunits = Math.cos(this.angle) * this.speed;
     // const yunits = Math.sin(this.angle) * this.speed;
     // this.pos.x += xunits;
@@ -73,7 +74,7 @@ export default class PlayerBall extends Ball {
   draw(ctx: CanvasRenderingContext2D) {
     ctx.save();
     ctx.beginPath();
-    ctx.arc(this.pos.x, this.pos.y, this.radius, 0, Math.PI * 2);
+    ctx.arc(Math.floor(this.pos.x), Math.floor(this.pos.y), this.radius, 0, Math.PI * 2);
     ctx.fillStyle = '#F44336';
     ctx.fill();
     ctx.closePath();
