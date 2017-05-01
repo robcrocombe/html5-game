@@ -1,15 +1,18 @@
+import * as utils from './utils';
 import Ball from './ball';
 
 export default class PowerBall extends Ball {
   return: boolean = false;
-  lastPos: Vector;
+  originPos: Vector;
+  bounce = false;
 
   constructor(canvas: HTMLCanvasElement, pos: Vector) {
     super(canvas);
 
     this.alive = true;
     this.pos = pos;
-    this.ver = { x: 0, y: this.speed };
+    this.originPos = Object.assign({}, pos);
+    this.ver = { x: 0, y: -0.02 };
   }
 
   update(delta: number, playerX?: number) {
@@ -24,6 +27,15 @@ export default class PowerBall extends Ball {
       }
     }
 
+    if (this.pos <= this.originPos && this.ver.y < 0 && this.ver.y > -0.23 && !this.bounce) {
+      this.ver.y -= 0.2;
+    } else {
+      this.ver.y += 0.015;
+      if (!this.bounce) {
+        this.ver.y = utils.clamp(this.ver.y, this.ver.y, this.speed);
+        this.bounce = true;
+      }
+    }
     this.pos.y += Math.ceil(this.ver.y * delta);
   }
 

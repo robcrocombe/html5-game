@@ -217,15 +217,15 @@ export function draw(fps) {
       break;
   }
 
-  for (let i = 0; i < powerBalls.length; ++i) {
-    powerBalls[i].draw(ctx);
-  }
-
   for (let i = 0; i < balls.length; ++i) {
     balls[i].draw(ctx);
   }
 
   Tile.rerender = tileCache.draw(ctx, Tile.rerender, renderTiles);
+
+  for (let i = 0; i < powerBalls.length; ++i) {
+    powerBalls[i].draw(ctx);
+  }
 
   utils.writeMessage(ctx, Math.round(fps));
   // utils.writeMessage(ctx, mouse.pos.x + ', ' + mouse.pos.y);
