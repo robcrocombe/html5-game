@@ -147,7 +147,7 @@ function addTileLine() {
 
   game.setTilePositions(canvas, tiles);
   Tile.rerender = true;
-  gameState = State.IDLE;
+  gameState = gameState = State.MOVE_LINE;
 }
 
 function tileHit(tile: Tile, ball: PlayerBall, direction?: string) {
@@ -204,6 +204,11 @@ export function update(delta: number) {
     case State.NEW_LINE:
       addTileLine();
       break;
+    case State.MOVE_LINE:
+      if (game.animateRow(tileCache, delta)) {
+        gameState = gameState = State.IDLE;
+      }
+      break;
   }
 }
 
@@ -227,6 +232,6 @@ export function draw(fps) {
     powerBalls[i].draw(ctx);
   }
 
-  utils.writeMessage(ctx, Math.round(fps));
-  // utils.writeMessage(ctx, mouse.pos.x + ', ' + mouse.pos.y);
+  // utils.writeMessage(ctx, Math.round(fps));
+  utils.writeMessage(ctx, mouse.pos.x + ', ' + mouse.pos.y);
 }

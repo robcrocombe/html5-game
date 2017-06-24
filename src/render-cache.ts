@@ -1,6 +1,7 @@
 export default class RenderCache {
   readonly canvas: HTMLCanvasElement;
   readonly context: CanvasRenderingContext2D;
+  offsetY: number = 0;
 
   constructor(width: number, height: number) {
     this.canvas = document.createElement('canvas');
@@ -15,7 +16,7 @@ export default class RenderCache {
       renderFunc(this.context);
       rerender = false;
     }
-    ctx.drawImage(this.canvas, 0, 0);
+    ctx.drawImage(this.canvas, 0, this.offsetY);
     return rerender;
   }
 }

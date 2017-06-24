@@ -2,25 +2,28 @@ import Tile from './tile';
 import MobTile from './mob-tile';
 import PowerTile from './power-tile';
 import PlayerBall from './player-ball';
+import RenderCache from './render-cache';
 
 interface IHitFunc {
   (tile: Tile, ball: PlayerBall, direction?: string)
 }
 
 const xPadding = 150;
-const yPadding = 100;
+let yPadding;
 let tileHeights: number[];
 let tileRows: Tile[][];
+let nextHeight = 0;
 
 export function setTilePositions(canvas: HTMLCanvasElement, tiles: Tile[]) {
-  let pos: Vector = { x: xPadding, y: yPadding };
+  const width = Math.floor((canvas.width - (xPadding * 2)) / Tile.rowLength);
+  const height = width;
+  yPadding = height;
+
+  let pos: Vector = { x: xPadding, y: 0 };
   tileHeights = [];
   tileRows = [];
   tileRows.push([]);
   let rowIndex = 0;
-
-  const width = Math.floor((canvas.width - (xPadding * 2)) / Tile.rowLength);
-  const height = width;
 
   for (let i = tiles.length - 1; i >= 0; --i) {
 
@@ -34,11 +37,35 @@ export function setTilePositions(canvas: HTMLCanvasElement, tiles: Tile[]) {
       pos.x = xPadding;
       pos.y += height;
 
-      tileHeights.push(pos.y);
       tileRows.push([]);
       rowIndex++;
     }
   }
+
+  nextHeight += yPadding;
+  console.log(nextHeight);
+}
+
+export function animateRow(tileCache: RenderCache, delta: number) {
+  // for (let i = 0; i < tiles.length; ++i) {
+  //   tiles[i].pos.y += nextSpeed * delta;
+  // }
+
+  // Tile.rerender = true;
+
+  // if (tiles[tiles.length - 1].pos.y >= nextHeight) {
+  //   return true;
+  // }
+  // return false;
+
+  tileCache.offsetY += 0.1 * delta;
+  Tile.rerender = true;
+
+  if (tileCache.offsetY >= nextHeight) {
+    // tileCache.offsetY = nextHeight;
+    return true;
+  }
+  return false;
 }
 
 export function collisionDetection(tiles: Tile[], balls: PlayerBall[], hit: IHitFunc) {

@@ -27,14 +27,15 @@
     "gulp": "^3.9.1",
     "gulp-util": "^3.0.8",
     "mainloop.js": "^1.0.3",
-    "stylelint": "^7.10.1",
-    "stylelint-config-standard": "^16.0.0",
-    "tslint": "^5.1.0",
     "tsutils": "^1.8.0",
     "typescript": "^2.3.2",
     "victor": "^1.1.0",
-    "webpack": "^2.4.1",
+    "webpack": "^3.0.0",
     "webpack-dev-server": "^2.4.4"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "stylelint": "^7.10.1",
+    "stylelint-config-standard": "^16.0.0",
+    "tslint": "^5.1.0"
+  }
 }

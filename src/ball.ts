@@ -16,6 +16,7 @@ export default abstract class Ball {
   }
 
   returnToPlayer(delta: number, playerX: number) {
+    delta = 1;
     const distance = Math.abs(this.pos.x - playerX) * 0.1;
 
     if (this.pos.x > playerX + 10) {

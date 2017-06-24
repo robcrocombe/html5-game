@@ -16,6 +16,7 @@ Ball Spawn - balls currently spawning
 Playing - balls moving, tiles reacting
 Power Return - new powerups return to player
 New Line - tiles spawn
+Line move - tiles move down 1 row
 
 ..back to Idle
 */
@@ -26,5 +27,6 @@ declare const enum State {
   BALL_SPAWN,
   PLAYING,
   PWR_RETURN,
-  NEW_LINE
+  NEW_LINE,
+  MOVE_LINE
 }
