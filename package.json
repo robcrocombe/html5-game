@@ -14,7 +14,7 @@
     "url": "git+https://github.com/robcrocombe/html5-game.git"
   },
   "author": "Rob Crocombe <me@robcrocombe.com> (http://robcrocombe.com)",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/robcrocombe/html5-game/issues"
   },
