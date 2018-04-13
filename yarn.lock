@@ -2,6 +2,14 @@
 # yarn lockfile v1
 
 
+"@types/mainloop.js@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/mainloop.js/-/mainloop.js-1.0.5.tgz#86db93e50852566bf384c3c866a31bb19aca8118"
+
+"@types/victor@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@types/victor/-/victor-1.1.0.tgz#c540809e2efb94ef60e293495cfad1614d14ec87"
+
 JSONStream@^0.8.4:
   version "0.8.4"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-0.8.4.tgz#91657dfe6ff857483066132b4618b62e8f4887bd"

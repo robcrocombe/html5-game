@@ -1,9 +1,0 @@
-{
-  "name": "html5-game",
-  "dependencies": {
-    "victor": "registry:dt/victor#0.2.5+20161006051847"
-  },
-  "globalDependencies": {
-    "mainloop.js": "registry:dt/mainloop.js#1.0.3+20161005184000"
-  }
-}
